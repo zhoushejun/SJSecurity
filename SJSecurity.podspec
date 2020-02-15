@@ -27,7 +27,7 @@ Pod::Spec.new do |spec|
   # spec.description  = <<-DESC
    #                DESC
 
-  spec.homepage     = "http://github.com/zhoushejun/SJSecurity"
+  spec.homepage     = "https://github.com/zhoushejun/SJSecurity"
   # spec.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -79,7 +79,7 @@ Pod::Spec.new do |spec|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  spec.source       = { :git => "http://github.com/zhoushejun/SJSecurity.git", :tag => spec.version }
+  spec.source       = { :git => "https://github.com/zhoushejun/SJSecurity.git", :tag => spec.version }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
