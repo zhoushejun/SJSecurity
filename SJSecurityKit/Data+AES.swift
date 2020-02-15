@@ -13,12 +13,8 @@ extension Data {
     private func aesCrypt(operation: CCOperation, algoritm:CCAlgorithm, key: Data, iv:Data? = nil) -> Data? {
         let keyData:NSData = key as NSData
         let data:NSData = self as NSData
-        
-        print("keyLength = \(keyData.length),keyData = \(keyData.base64EncodedString(options: .lineLength64Characters))")
-        print("data length = \(data.length),data = \(data.base64EncodedString(options: .lineLength64Characters))")
         let buffer = NSMutableData(length:Int(data.length) + kCCBlockSizeAES128 )!
         let bufferSize = self.count + kCCBlockSizeAES128
-        
         let options:CCOptions = UInt32(kCCOptionECBMode + kCCOptionPKCS7Padding)
         var encryptedBytes:size_t = 0
         
@@ -33,13 +29,7 @@ extension Data {
         
         if UInt32(cryptStatus) == UInt32(kCCSuccess){
             buffer.length = Int(encryptedBytes)
-            print("cryptLength = \(encryptedBytes),cryptData = \(buffer.base64EncodedString(options: .lineLength64Characters)) ")
-            
-            let base64CryptString = buffer.base64EncodedString(options: .lineLength64Characters)
-            print("base64CryptString = \(base64CryptString)")
-            
         } else {
-            print("Error:\(cryptStatus)")
             return nil
         }
         let resultData = NSData.init(bytes: buffer.mutableBytes, length: encryptedBytes)
