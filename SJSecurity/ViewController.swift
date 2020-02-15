@@ -13,8 +13,58 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+//        demo1()
+        demo2()
     }
 
-
+    func demo1() {
+        let message = "999"
+//        guard let key = "0123456789123456".data(using: .utf8) else { return } // 16位
+//        guard let key = "012345678901234567891234".data(using: .utf8) else { return } // 24 位
+        guard let key = "01234567890123456789012345678912".data(using: .utf8) else { return } // 32 位
+        
+//        guard let iv = "0123456789123456".data(using: .utf8) else { return } // 16位
+//        guard let iv = "012345678901234567891234".data(using: .utf8) else { return } // 24 位
+        guard let iv = "01234567890123456789012345678912".data(using: .utf8) else { return } // 32 位
+        
+        let encryptData = message.data(using: .utf8)?.aesCBCEncrypt(key: key, iv: iv)
+        if encryptData != nil {
+            print("demo1 加密成功，加密前的数据：\(message)")
+        }
+        else {
+            print("demo1 加密失败")
+            return
+        }
+        
+        let decryptData = encryptData?.aesCBCDecrypt(key: key, iv: iv)
+        if decryptData != nil, let decryptString = String.init(data: decryptData!, encoding: .utf8) {
+            print("demo1 解密成功，解密出的数据：\(decryptString)")
+        } else {
+            print("demo1 解密失败")
+        }
+    }
+    
+    func demo2() {
+        let message = "999"
+        guard let key = "0123456789123456".data(using: .utf8) else { return } // 16位
+//        guard let key = "012345678901234567891234".data(using: .utf8) else { return } // 24 位
+//        guard let key = "01234567890123456789012345678912".data(using: .utf8) else { return } // 32 位
+        
+        let encryptData = message.data(using: .utf8)?.aesECBEncrypt(key: key)
+        if encryptData != nil {
+            print("demo2 加密成功，加密前的数据：\(message)")
+        }
+        else {
+            print("demo2 加密失败")
+            return
+        }
+        
+        let decryptData = encryptData?.aesECBDecrypt(key: key)
+        if decryptData != nil, let decryptString = String.init(data: decryptData!, encoding: .utf8) {
+            print("demo2 解密成功，解密出的数据：\(decryptString)")
+        } else {
+            print("demo2 解密失败")
+        }
+    }
 }
 
