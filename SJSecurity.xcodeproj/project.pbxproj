@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		04D4EF23F8D40EA7CDFAA974 /* Pods_SJSecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB5D132E634202ECEBCB2E4B /* Pods_SJSecurity.framework */; };
+		18A1D09523F92850005FF26D /* RSAKeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A1D09423F92850005FF26D /* RSAKeyPair.swift */; };
 		18E964B423F7D5FB0073C25B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E964B323F7D5FB0073C25B /* AppDelegate.swift */; };
 		18E964B623F7D5FB0073C25B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E964B523F7D5FB0073C25B /* SceneDelegate.swift */; };
 		18E964B823F7D5FB0073C25B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E964B723F7D5FB0073C25B /* ViewController.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18A1D09423F92850005FF26D /* RSAKeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyPair.swift; sourceTree = "<group>"; };
 		18E964B023F7D5FB0073C25B /* SJSecurity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SJSecurity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18E964B323F7D5FB0073C25B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18E964B523F7D5FB0073C25B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				18E964C823F7EFB60073C25B /* Data+AES.swift */,
+				18A1D09423F92850005FF26D /* RSAKeyPair.swift */,
 			);
 			path = SJSecurityKit;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 				18E964B823F7D5FB0073C25B /* ViewController.swift in Sources */,
 				18E964B423F7D5FB0073C25B /* AppDelegate.swift in Sources */,
 				18E964B623F7D5FB0073C25B /* SceneDelegate.swift in Sources */,
+				18A1D09523F92850005FF26D /* RSAKeyPair.swift in Sources */,
 				18E964C923F7EFB60073C25B /* Data+AES.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

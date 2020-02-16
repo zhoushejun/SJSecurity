@@ -14,7 +14,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
 //        demo1()
-        demo2()
+//        demo2()
+        demo3()
     }
 
     func demo1() {
@@ -65,6 +66,32 @@ class ViewController: UIViewController {
         } else {
             print("demo2 解密失败")
         }
+    }
+    
+    func demo3() {
+        let src = "abcdefg"
+//        guard let rsaKeyPair = RSAKeyPair.generate() else {
+//            print("生成 RSA 密钥对失败")
+//            return
+//        }
+        
+//        let rsaKeyPair = RSAKeyPair()
+//        rsaKeyPair.generate()
+        
+        let rsaKeyPair = RSAKeyPair.init()
+        rsaKeyPair.generate()
+        
+        guard let encryptResult = rsaKeyPair.encrypt(source: src) else {
+            print("RSA 加密失败")
+            return
+        }
+        print("RSA 加密成功。加密前原始数据：\(src)")
+        
+        guard let decryptResult = rsaKeyPair.decrypt(source: encryptResult) else {
+            print("RSA 解密失败")
+            return
+        }
+        print("RSA 解密成功。解密出来的数据：\(decryptResult)")
     }
 }
 
