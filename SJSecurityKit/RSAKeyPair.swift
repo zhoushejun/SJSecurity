@@ -44,8 +44,8 @@ public class RSAKeyPair: NSObject {
         privateSecKey = nil
         let parameters = [kSecAttrKeyType: kSecAttrKeyTypeRSA,
                           kSecAttrKeySizeInBits: kSize] as [CFString : Any]
-        let ret = SecKeyGeneratePair(parameters as CFDictionary, &publicSecKey, &privateSecKey)
-        assert(ret == errSecSuccess, "Error For SecKeyGeneratePair: \(ret)")
+        let status = SecKeyGeneratePair(parameters as CFDictionary, &publicSecKey, &privateSecKey)
+        assert(status == errSecSuccess, "Error For SecKeyGeneratePair: \(status)")
     }
     
     /// 加密，使用公钥加密
