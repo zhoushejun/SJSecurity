@@ -17,7 +17,8 @@ class ViewController: UIViewController {
 //        demo2()
         demo3()
     }
-
+    
+    /// CBC 加解密
     func demo1() {
         let message = "999"
 //        guard let key = "0123456789123456".data(using: .utf8) else { return } // 16位
@@ -45,6 +46,7 @@ class ViewController: UIViewController {
         }
     }
     
+    /// ECB 加解密
     func demo2() {
         let message = "999"
         guard let key = "0123456789123456".data(using: .utf8) else { return } // 16位
@@ -68,8 +70,13 @@ class ViewController: UIViewController {
         }
     }
     
+    /// RSA 加解密
     func demo3() {
-        let src = "abcdefg"
+        var src = ""
+        for _ in 0 ..< 200 {
+            src += "1"
+        }
+        print("source length: \(src.count)")
 //        guard let rsaKeyPair = RSAKeyPair.generate() else {
 //            print("生成 RSA 密钥对失败")
 //            return
@@ -78,20 +85,21 @@ class ViewController: UIViewController {
 //        let rsaKeyPair = RSAKeyPair()
 //        rsaKeyPair.generate()
         
-        let rsaKeyPair = RSAKeyPair.init()
+        let rsaKeyPair = RSAKeyPair.init(algorithm: .rsaEncryptionOAEPSHA256AESGCM)
         rsaKeyPair.generate()
         
-        guard let encryptResult = rsaKeyPair.encrypt(source: src) else {
+        guard let encryptedData = rsaKeyPair.encrypt(source: src.data(using: .utf8)!) else {
             print("RSA 加密失败")
             return
         }
         print("RSA 加密成功。加密前原始数据：\(src)")
         
-        guard let decryptResult = rsaKeyPair.decrypt(source: encryptResult) else {
+        guard let decryptedData = rsaKeyPair.decrypt(source: encryptedData) else {
             print("RSA 解密失败")
             return
         }
-        print("RSA 解密成功。解密出来的数据：\(decryptResult)")
+        guard let decryptedString = String.init(data: decryptedData, encoding: .utf8) else { return }
+        print("RSA 解密成功。解密出来的数据：\(decryptedString)")
     }
 }
 

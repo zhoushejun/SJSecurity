@@ -20,6 +20,13 @@ public enum RSAKeySize: Int {
 public class RSAKeyPair: NSObject {
     private(set) var publicSecKey: SecKey?
     private(set) var privateSecKey: SecKey?
+    
+    /// 注意事项，针对默认的算法，以下注释为官方资料：
+    /// @constant kSecKeyAlgorithmRSAEncryptionPKCS1
+    /// RSA encryption or decryption, data is padded using PKCS#1 padding scheme.
+    /// This algorithm should be used only for backward compatibility with existing protocols and data.
+    /// New implementations should choose cryptographically stronger algorithm instead (see kSecKeyAlgorithmRSAEncryptionOAEP).
+    /// Input data must be at most "key block size - 11" bytes long and returned block has always the same size as block size, as returned by SecKeyGetBlockSize().
     private var algorithm: SecKeyAlgorithm = .rsaEncryptionPKCS1
     
     init(algorithm: SecKeyAlgorithm = .rsaEncryptionPKCS1) {
@@ -50,33 +57,28 @@ public class RSAKeyPair: NSObject {
     
     /// 加密，使用公钥加密
     /// - Parameter source: 需要加密的明文
-    public func encrypt(source: String) -> String? {
+    public func encrypt(source: Data) -> Data? {
         guard !source.isEmpty, let pubKey = self.publicSecKey, let _ = self.privateSecKey else {  return nil }
-        guard let sourceData: CFData = source.data(using: .utf8) as CFData? else { return nil }
-        
+        guard let sourceData = source as CFData? else { return nil }
         var error: Unmanaged<CFError>?
         let encryptedData =  SecKeyCreateEncryptedData(pubKey, algorithm, sourceData, &error)
         if error != nil {
             print("res = \(error!.takeUnretainedValue().localizedDescription)")
             return nil
         }
-        guard let retData = encryptedData as Data? else { return nil}
-        return retData.base64EncodedString(options: .lineLength64Characters)
+        return encryptedData as Data?
     }
     
     /// 解密，使用私钥解密
     /// - Parameter source: 需要解密的密文
-    public func decrypt(source: String) -> String? {
+    public func decrypt(source: Data) -> Data? {
         guard !source.isEmpty, let priKey = self.privateSecKey, let _ = self.publicSecKey else { return nil }
-        guard let data: Data = Data.init(base64Encoded: source, options: .ignoreUnknownCharacters) else { return nil }
-        
         var error: Unmanaged<CFError>?
-        let decryptedData =  SecKeyCreateDecryptedData(priKey, algorithm, data as CFData, &error) as Data?
+        let decryptedData =  SecKeyCreateDecryptedData(priKey, algorithm, source as CFData, &error) as Data?
         if error != nil {
             print("res = \(error!.takeUnretainedValue().localizedDescription)")
             return nil
         }
-        guard let resData = decryptedData else { return nil}
-        return String.init(data: resData, encoding: .utf8)
+        return decryptedData
     }
 }
