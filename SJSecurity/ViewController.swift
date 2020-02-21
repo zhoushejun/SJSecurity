@@ -15,9 +15,11 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
 //        demo1()
 //        demo2()
-        demo3()
+//        demo3()
+        demo4()
     }
-
+    
+    /// CBC 加解密
     func demo1() {
         let message = "999"
 //        guard let key = "0123456789123456".data(using: .utf8) else { return } // 16位
@@ -45,6 +47,7 @@ class ViewController: UIViewController {
         }
     }
     
+    /// ECB 加解密
     func demo2() {
         let message = "999"
         guard let key = "0123456789123456".data(using: .utf8) else { return } // 16位
@@ -68,30 +71,68 @@ class ViewController: UIViewController {
         }
     }
     
+    /// RSA 加解密
     func demo3() {
-        let src = "abcdefg"
+        var src = ""
+        for _ in 0 ..< 117 {
+            src += "1"
+        }
+        print("source length: \(src.count)")
+//        初始化方法一：
 //        guard let rsaKeyPair = RSAKeyPair.generate() else {
 //            print("生成 RSA 密钥对失败")
 //            return
 //        }
         
+//        初始化方法二：
 //        let rsaKeyPair = RSAKeyPair()
 //        rsaKeyPair.generate()
         
-        let rsaKeyPair = RSAKeyPair.init()
+//        初始化方法三：
+        let rsaKeyPair = RSAKeyPair.init(algorithm: .rsaEncryptionOAEPSHA256AESGCM)
         rsaKeyPair.generate()
         
-        guard let encryptResult = rsaKeyPair.encrypt(source: src) else {
+        guard let encryptedData = rsaKeyPair.encrypt(source: src.data(using: .utf8)!) else {
             print("RSA 加密失败")
             return
         }
         print("RSA 加密成功。加密前原始数据：\(src)")
         
-        guard let decryptResult = rsaKeyPair.decrypt(source: encryptResult) else {
+        guard let decryptedData = rsaKeyPair.decrypt(source: encryptedData) else {
             print("RSA 解密失败")
             return
         }
-        print("RSA 解密成功。解密出来的数据：\(decryptResult)")
+        guard let decryptedString = String.init(data: decryptedData, encoding: .utf8) else { return }
+        print("RSA 解密成功。解密出来的数据：\(decryptedString)")
+    }
+    
+    /// RSA签名与验签
+    func demo4() {
+        var src = ""
+        let length = 128 - 30
+        for _ in 0 ..< length {
+            src += "1"
+        }
+        let rsaKeyPair = RSAKeyPair.init(padding: .PKCS1SHA512)
+        rsaKeyPair.generate()
+        
+        let signData = rsaKeyPair.sign(source: src.data(using: .utf8)!)
+
+        if signData != nil {
+            print("签名成功")
+        }
+        else {
+            print("签名失败")
+            return
+        }
+        
+        let status = rsaKeyPair.verify(source: src.data(using: .utf8)!, signData: signData!)
+        if status == true {
+            print("验签成功")
+        }
+        else {
+            print("验签失败")
+        }
     }
 }
 
