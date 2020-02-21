@@ -15,7 +15,8 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
 //        demo1()
 //        demo2()
-        demo3()
+//        demo3()
+        demo4()
     }
     
     /// CBC 加解密
@@ -73,18 +74,21 @@ class ViewController: UIViewController {
     /// RSA 加解密
     func demo3() {
         var src = ""
-        for _ in 0 ..< 200 {
+        for _ in 0 ..< 117 {
             src += "1"
         }
         print("source length: \(src.count)")
+//        初始化方法一：
 //        guard let rsaKeyPair = RSAKeyPair.generate() else {
 //            print("生成 RSA 密钥对失败")
 //            return
 //        }
         
+//        初始化方法二：
 //        let rsaKeyPair = RSAKeyPair()
 //        rsaKeyPair.generate()
         
+//        初始化方法三：
         let rsaKeyPair = RSAKeyPair.init(algorithm: .rsaEncryptionOAEPSHA256AESGCM)
         rsaKeyPair.generate()
         
@@ -100,6 +104,35 @@ class ViewController: UIViewController {
         }
         guard let decryptedString = String.init(data: decryptedData, encoding: .utf8) else { return }
         print("RSA 解密成功。解密出来的数据：\(decryptedString)")
+    }
+    
+    /// RSA签名与验签
+    func demo4() {
+        var src = ""
+        let length = 128 - 30
+        for _ in 0 ..< length {
+            src += "1"
+        }
+        let rsaKeyPair = RSAKeyPair.init(padding: .PKCS1SHA512)
+        rsaKeyPair.generate()
+        
+        let signData = rsaKeyPair.sign(source: src.data(using: .utf8)!)
+
+        if signData != nil {
+            print("签名成功")
+        }
+        else {
+            print("签名失败")
+            return
+        }
+        
+        let status = rsaKeyPair.verify(source: src.data(using: .utf8)!, signData: signData!)
+        if status == true {
+            print("验签成功")
+        }
+        else {
+            print("验签失败")
+        }
     }
 }
 
