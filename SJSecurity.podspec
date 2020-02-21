@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "SJSecurity"
-  spec.version      = "0.0.1"
+  spec.version      = "0.0.2"
   spec.summary      = "The SJSecurity framework provides neat Swift API for CommonCrypto and Security routines, and these algorithms are implemented: RSA, AES, data signature, signature verification, DH key exchange, HKDF, MD5, SHA1, SHA256."
 
   # This description is used to generate tags and improve search results.
