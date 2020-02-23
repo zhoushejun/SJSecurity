@@ -36,7 +36,7 @@ public class RSAKeyPair: NSObject {
          assert(status == errSecSuccess, "Error For SecKeyGeneratePair: \(status)")
      }
     
-    /// 从 x.509 der 编码格式证书中读取公钥
+    /// 从 der 编码格式证书中读取公钥
     /// - Parameter cerFilePath: 证书目录
     public func readPublicSecKey(derFilePath: String) {
         guard let derData = try? NSData.init(contentsOfFile: derFilePath) as CFData,
