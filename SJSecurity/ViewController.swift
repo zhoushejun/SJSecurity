@@ -255,7 +255,7 @@ class ViewController: UIViewController {
         let password = "123456"
         
         guard let priFilePath = Bundle.main.path(forResource: priResource, ofType: nil) else {
-                return
+            return
         }
         let rsaKeyPair = RSAKeyPair.init(algorithm: .rsaEncryptionPKCS1)
         rsaKeyPair.readP12SecKeys(p12FilePath: priFilePath, password: password)
