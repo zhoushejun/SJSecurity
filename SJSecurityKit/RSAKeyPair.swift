@@ -36,7 +36,7 @@ public class RSAKeyPair: NSObject {
          assert(status == errSecSuccess, "Error For SecKeyGeneratePair: \(status)")
      }
     
-    /// 从 x.509 der 证书中读取公钥
+    /// 从 x.509 der 编码格式证书中读取公钥
     /// - Parameter cerFilePath: 证书目录
     public func readPublicSecKey(derFilePath: String) {
         guard let derData = try? NSData.init(contentsOfFile: derFilePath) as CFData,
@@ -50,7 +50,7 @@ public class RSAKeyPair: NSObject {
         publicSecKey = SecTrustCopyPublicKey(trust!)
     }
     
-    /// 从 pem 证书中读取公钥
+    /// 从 pem 编码格式证书中读取公钥
     /// - Parameters:
     ///   - pemFilePath: 证书目录
     ///   - keySize: RSA键的长度
@@ -76,7 +76,7 @@ public class RSAKeyPair: NSObject {
         }
     }
     
-    /// 从 pem 证书中读取私钥
+    /// 从 pem 编码格式证书中读取私钥
     /// - Parameters:
     ///   - pemFilePath: 证书目录
     ///   - keySize: 加密密钥中的 bit 位数
