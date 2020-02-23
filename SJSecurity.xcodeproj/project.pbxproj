@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		04D4EF23F8D40EA7CDFAA974 /* Pods_SJSecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB5D132E634202ECEBCB2E4B /* Pods_SJSecurity.framework */; };
+		18624A222400D6240077CDC3 /* private_key.pem in Resources */ = {isa = PBXBuildFile; fileRef = 18624A212400D6240077CDC3 /* private_key.pem */; };
+		18624A242401587A0077CDC3 /* public_key.der in Resources */ = {isa = PBXBuildFile; fileRef = 18624A232400D62A0077CDC3 /* public_key.der */; };
+		18624A26240158A50077CDC3 /* private_key.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 18624A25240158A50077CDC3 /* private_key.p12 */; };
+		18624A2C240210AC0077CDC3 /* public_key.pem in Resources */ = {isa = PBXBuildFile; fileRef = 18624A2B240210AB0077CDC3 /* public_key.pem */; };
 		18A1D09523F92850005FF26D /* RSAKeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A1D09423F92850005FF26D /* RSAKeyPair.swift */; };
 		18E964B423F7D5FB0073C25B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E964B323F7D5FB0073C25B /* AppDelegate.swift */; };
 		18E964B623F7D5FB0073C25B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E964B523F7D5FB0073C25B /* SceneDelegate.swift */; };
@@ -19,6 +23,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18624A212400D6240077CDC3 /* private_key.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = private_key.pem; sourceTree = "<group>"; };
+		18624A232400D62A0077CDC3 /* public_key.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = public_key.der; sourceTree = "<group>"; };
+		18624A25240158A50077CDC3 /* private_key.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = private_key.p12; sourceTree = "<group>"; };
+		18624A2B240210AB0077CDC3 /* public_key.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = public_key.pem; sourceTree = "<group>"; };
 		18A1D09423F92850005FF26D /* RSAKeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyPair.swift; sourceTree = "<group>"; };
 		18E964B023F7D5FB0073C25B /* SJSecurity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SJSecurity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18E964B323F7D5FB0073C25B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -75,6 +83,10 @@
 				18E964BC23F7D5FE0073C25B /* Assets.xcassets */,
 				18E964BE23F7D5FE0073C25B /* LaunchScreen.storyboard */,
 				18E964C123F7D5FE0073C25B /* Info.plist */,
+				18624A25240158A50077CDC3 /* private_key.p12 */,
+				18624A212400D6240077CDC3 /* private_key.pem */,
+				18624A2B240210AB0077CDC3 /* public_key.pem */,
+				18624A232400D62A0077CDC3 /* public_key.der */,
 			);
 			path = SJSecurity;
 			sourceTree = "<group>";
@@ -166,7 +178,11 @@
 			files = (
 				18E964C023F7D5FE0073C25B /* LaunchScreen.storyboard in Resources */,
 				18E964BD23F7D5FE0073C25B /* Assets.xcassets in Resources */,
+				18624A2C240210AC0077CDC3 /* public_key.pem in Resources */,
+				18624A222400D6240077CDC3 /* private_key.pem in Resources */,
 				18E964BB23F7D5FB0073C25B /* Main.storyboard in Resources */,
+				18624A242401587A0077CDC3 /* public_key.der in Resources */,
+				18624A26240158A50077CDC3 /* private_key.p12 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

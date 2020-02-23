@@ -13,10 +13,19 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
 //        demo1()
 //        demo2()
 //        demo3()
-        demo4()
+//        demo4()
+//        demo5()
+//        demo6()
+//        demo7()
+        demo8()
     }
     
     /// CBC 加解密
@@ -133,6 +142,143 @@ class ViewController: UIViewController {
         else {
             print("验签失败")
         }
+    }
+    
+    /// 读取本地证书公私钥
+    func demo5() {
+        let pubResource = "public_key.der"
+        let priResource = "private_key.p12"
+        let password = "123456"
+        
+        guard let pubFilePath = Bundle.main.path(forResource: pubResource, ofType: nil),
+            let priFilePath = Bundle.main.path(forResource: priResource, ofType: nil) else {
+                return
+        }
+        let rsaKeyPair = RSAKeyPair.init(algorithm: .rsaEncryptionPKCS1)
+        rsaKeyPair.readPublicSecKey(derFilePath: pubFilePath)
+        rsaKeyPair.readP12SecKeys(p12FilePath: priFilePath, password: password)
+        
+        print("pubKey:\(rsaKeyPair.publicSecKey!)")
+        print("priKey:\(rsaKeyPair.privateSecKey!)")
+        
+        var src = ""
+        for _ in 0 ..< 117 {
+            src += "1"
+        }
+        print("source length: \(src.count)")
+        guard let encryptedData = rsaKeyPair.encrypt(source: src.data(using: .utf8)!) else {
+            print("RSA 加密失败")
+            return
+        }
+        print("RSA 加密成功。加密前原始数据：\(src)")
+        
+        guard let decryptedData = rsaKeyPair.decrypt(source: encryptedData) else {
+            print("RSA 解密失败")
+            return
+        }
+        guard let decryptedString = String.init(data: decryptedData, encoding: .utf8) else { return }
+        print("RSA 解密成功。解密出来的数据：\(decryptedString)")
+    }
+    
+    /// 读取本地证书公私钥
+    func demo6() {
+        let pubResource = "public_key.pem"
+        let priResource = "private_key.pem"
+        
+        guard let pubFilePath = Bundle.main.path(forResource: pubResource, ofType: nil),
+            let priFilePath = Bundle.main.path(forResource: priResource, ofType: nil) else {
+                return
+        }
+        let rsaKeyPair = RSAKeyPair.init(algorithm: .rsaEncryptionPKCS1)
+        rsaKeyPair.readPublicSecKey(pemFilePath: pubFilePath)
+        rsaKeyPair.readPrivateSecKey(pemFilePath: priFilePath)
+        print("pubKey:\(rsaKeyPair.publicSecKey!)")
+        print("priKey:\(rsaKeyPair.privateSecKey!)")
+        
+        var src = ""
+        for _ in 0 ..< 117 {
+            src += "1"
+        }
+        print("source length: \(src.count)")
+        guard let encryptedData = rsaKeyPair.encrypt(source: src.data(using: .utf8)!) else {
+            print("RSA 加密失败")
+            return
+        }
+        print("RSA 加密成功。加密前原始数据：\(src)")
+        
+        guard let decryptedData = rsaKeyPair.decrypt(source: encryptedData) else {
+            print("RSA 解密失败")
+            return
+        }
+        guard let decryptedString = String.init(data: decryptedData, encoding: .utf8) else { return }
+        print("RSA 解密成功。解密出来的数据：\(decryptedString)")
+    }
+    
+    /// 读取本地证书公私钥
+    func demo7() {
+        let pubResource = "public_key.pem"
+        let priResource = "private_key.p12"
+        let password = "123456"
+        
+        guard let pubFilePath = Bundle.main.path(forResource: pubResource, ofType: nil),
+            let priFilePath = Bundle.main.path(forResource: priResource, ofType: nil) else {
+                return
+        }
+        let rsaKeyPair = RSAKeyPair.init(algorithm: .rsaEncryptionPKCS1)
+        rsaKeyPair.readPublicSecKey(pemFilePath: pubFilePath)
+        rsaKeyPair.readP12SecKeys(p12FilePath: priFilePath, password: password)
+        print("pubKey:\(rsaKeyPair.publicSecKey!)")
+        print("priKey:\(rsaKeyPair.privateSecKey!)")
+        
+        var src = ""
+        for _ in 0 ..< 117 {
+            src += "1"
+        }
+        print("source length: \(src.count)")
+        guard let encryptedData = rsaKeyPair.encrypt(source: src.data(using: .utf8)!) else {
+            print("RSA 加密失败")
+            return
+        }
+        print("RSA 加密成功。加密前原始数据：\(src)")
+        
+        guard let decryptedData = rsaKeyPair.decrypt(source: encryptedData) else {
+            print("RSA 解密失败")
+            return
+        }
+        guard let decryptedString = String.init(data: decryptedData, encoding: .utf8) else { return }
+        print("RSA 解密成功。解密出来的数据：\(decryptedString)")
+    }
+    
+    /// 读取本地证书公私钥
+    func demo8() {
+        let priResource = "private_key.p12"
+        let password = "123456"
+        
+        guard let priFilePath = Bundle.main.path(forResource: priResource, ofType: nil) else {
+                return
+        }
+        let rsaKeyPair = RSAKeyPair.init(algorithm: .rsaEncryptionPKCS1)
+        rsaKeyPair.readP12SecKeys(p12FilePath: priFilePath, password: password)
+        print("pubKey:\(rsaKeyPair.publicSecKey!)")
+        print("priKey:\(rsaKeyPair.privateSecKey!)")
+        
+        var src = ""
+        for _ in 0 ..< 117 {
+            src += "1"
+        }
+        print("source length: \(src.count)")
+        guard let encryptedData = rsaKeyPair.encrypt(source: src.data(using: .utf8)!) else {
+            print("RSA 加密失败")
+            return
+        }
+        print("RSA 加密成功。加密前原始数据：\(src)")
+        
+        guard let decryptedData = rsaKeyPair.decrypt(source: encryptedData) else {
+            print("RSA 解密失败")
+            return
+        }
+        guard let decryptedString = String.init(data: decryptedData, encoding: .utf8) else { return }
+        print("RSA 解密成功。解密出来的数据：\(decryptedString)")
     }
 }
 
