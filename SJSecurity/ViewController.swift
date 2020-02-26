@@ -21,11 +21,11 @@ class ViewController: UIViewController {
 //        demo1()
 //        demo2()
 //        demo3()
-//        demo4()
+        demo4()
 //        demo5()
 //        demo6()
 //        demo7()
-        demo8()
+//        demo8()
     }
     
     /// CBC 加解密
@@ -128,7 +128,17 @@ class ViewController: UIViewController {
         let signData = rsaKeyPair.sign(source: src.data(using: .utf8)!)
 
         if signData != nil {
-            print("签名成功")
+            print("签名成功：\(signData!.base64EncodedString())")
+        }
+        else {
+            print("签名失败")
+            return
+        }
+        
+        let signData2 = rsaKeyPair.sign(source: src.data(using: .utf8)!)
+
+        if signData2 != nil {
+            print("签名成功：\(signData2!.base64EncodedString())")
         }
         else {
             print("签名失败")
