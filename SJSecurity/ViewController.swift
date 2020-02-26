@@ -21,11 +21,12 @@ class ViewController: UIViewController {
 //        demo1()
 //        demo2()
 //        demo3()
-        demo4()
+//        demo4()
 //        demo5()
 //        demo6()
 //        demo7()
 //        demo8()
+        demo9()
     }
     
     /// CBC 加解密
@@ -289,6 +290,13 @@ class ViewController: UIViewController {
         }
         guard let decryptedString = String.init(data: decryptedData, encoding: .utf8) else { return }
         print("RSA 解密成功。解密出来的数据：\(decryptedString)")
+    }
+    
+    /// MD5
+    func demo9() {
+        let string = "123456"
+        let hashValue = string.md5()
+        print("md5 hash value:\(hashValue)")
     }
 }
 
