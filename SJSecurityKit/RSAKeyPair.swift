@@ -214,9 +214,11 @@ public class RSAKeyPair: NSObject {
         return keyPair
     }
     
-    /// 签名
-    /// - Parameter source: 待签名的原始数据
+    /// 签名：给定要签名的私钥和数据，生成数字签名。
+    /// - Parameter source: 待签名的数据，通常是明文数据的哈希值。
     /// return 签名后的数据
+    /// 使用同一对公私钥对同一字符串进行签名，每次执行结果都是一样的。因为没有加随机数。
+    /// 正常来说是要加一个随机数的，待完善。。。
     public func sign(source: Data) -> Data? {
         guard !source.isEmpty, let priKey = self.privateSecKey, let _ = self.publicSecKey else {  return nil }
         guard let sourceData: NSData = source as NSData? else { return nil }
