@@ -9,7 +9,8 @@
 import Foundation
 import Security
 
-//官方资料：RSA keys may have key size values of 512, 768, 1024, or 2048.
+/// RSA键的长度，加密密钥中的 bit 位数。
+/// 官方资料：RSA keys may have key size values of 512, 768, 1024, or 2048.
 public enum RSAKeySize: Int {
     case bits512 = 512
     case bits768 = 768
@@ -34,6 +35,103 @@ public class RSAKeyPair: NSObject {
          let status = SecKeyGeneratePair(parameters as CFDictionary, &publicSecKey, &privateSecKey)
          assert(status == errSecSuccess, "Error For SecKeyGeneratePair: \(status)")
      }
+    
+    /// 从 der 编码格式证书中读取公钥
+    /// - Parameter cerFilePath: 证书目录
+    public func readPublicSecKey(derFilePath: String) {
+        guard let derData = try? NSData.init(contentsOfFile: derFilePath) as CFData,
+            let certificate = SecCertificateCreateWithData(nil, derData) else {
+                return
+        }
+        let policy = SecPolicyCreateBasicX509()
+        var trust:SecTrust? = nil
+        let status = SecTrustCreateWithCertificates(certificate, policy, &trust)
+        assert(status == errSecSuccess, "SecTrustCreateWithCertificates error")
+        publicSecKey = SecTrustCopyPublicKey(trust!)
+    }
+    
+    /// 从 pem 编码格式证书中读取公钥
+    /// - Parameters:
+    ///   - pemFilePath: 证书目录
+    ///   - keySize: RSA键的长度
+    public func readPublicSecKey(pemFilePath: String, keySize: RSAKeySize = .bits1024) {
+        guard let pemStr = try? String.init(contentsOfFile: pemFilePath, encoding: .ascii) else {
+            return
+        }
+        var pemContent = pemStr.replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----", with: "")
+        pemContent = pemContent.replacingOccurrences(of: "\r", with: "")
+        pemContent = pemContent.replacingOccurrences(of: "\n", with: "")
+        pemContent = pemContent.replacingOccurrences(of: "-----END PUBLIC KEY-----", with: "")
+        guard let pemData = Data.init(base64Encoded: pemContent) else {
+            return
+        }
+        let pubKeyData = pemData as CFData
+        let attributes = [kSecAttrKeyType: kSecAttrKeyTypeRSA,
+                          kSecAttrKeyClass: kSecAttrKeyClassPublic,
+                          kSecAttrKeySizeInBits: keySize] as [CFString : Any]
+        var error: Unmanaged<CFError>?
+        publicSecKey = SecKeyCreateWithData(pubKeyData, attributes as CFDictionary, &error)
+        if error != nil {
+            print("publicSecKey SecKeyCreateWithData error: \(error!.takeUnretainedValue().localizedDescription)")
+        }
+    }
+    
+    /// 从 pem 编码格式证书中读取私钥
+    /// - Parameters:
+    ///   - pemFilePath: 证书目录
+    ///   - keySize: 加密密钥中的 bit 位数
+    public func readPrivateSecKey(pemFilePath: String, keySize: RSAKeySize = .bits1024) {
+        guard let pemStr = try? String.init(contentsOfFile: pemFilePath, encoding: .ascii) else {
+            return
+        }
+        var pemContent = pemStr.replacingOccurrences(of: "-----BEGIN RSA PRIVATE KEY-----", with: "")
+        pemContent = pemContent.replacingOccurrences(of: "\r", with: "")
+        pemContent = pemContent.replacingOccurrences(of: "\n", with: "")
+        pemContent = pemContent.replacingOccurrences(of: "-----END RSA PRIVATE KEY-----", with: "")
+        guard let pemData = Data.init(base64Encoded: pemContent) else {
+            return
+        }
+        let priKeyData = pemData as CFData
+        let attributes = [kSecAttrKeyType: kSecAttrKeyTypeRSA,
+                          kSecAttrKeyClass: kSecAttrKeyClassPrivate,
+                          kSecAttrKeySizeInBits: keySize] as [CFString : Any]
+        var error: Unmanaged<CFError>?
+        privateSecKey = SecKeyCreateWithData(priKeyData, attributes as CFDictionary, &error)
+        if error != nil {
+            print("privateSecKey SecKeyCreateWithData error: \(error!.takeUnretainedValue().localizedDescription)")
+        }
+    }
+    
+    /// 从 p12 证书中读取公私钥
+    /// - Parameters:
+    ///   - p12FilePath: 证书目录
+    ///   - password: 私钥密码，p12 证书一般都是要设置密码的
+    public func readP12SecKeys(p12FilePath: String, password: String) {
+        guard let pkcs12Data = try? NSData.init(contentsOfFile: p12FilePath) as CFData else {
+            return
+        }
+        var imported: CFArray? = nil
+        let passphrase = kSecImportExportPassphrase as String
+        let options: Dictionary = [passphrase: password]
+        var status = SecPKCS12Import(pkcs12Data, options as CFDictionary, &imported)
+        assert(status == errSecSuccess, "SecPKCS12Import error status:\(status)")
+        let importedItem = unsafeBitCast(CFArrayGetValueAtIndex(imported, 0), to: CFDictionary.self)
+        guard let dic = importedItem as? Dictionary<String, Any> else {
+            return
+        }
+        let identity = dic[kSecImportItemIdentity as String]  as! SecIdentity
+        status = SecIdentityCopyPrivateKey(identity, &privateSecKey)
+        assert(status == errSecSuccess, "SecIdentityCopyPrivateKey error status:\(status)")
+        
+        var certificate: SecCertificate?
+        status = SecIdentityCopyCertificate(identity, &certificate)
+        assert(status == errSecSuccess, "SecIdentityCopyCertificate error status:\(status)")
+        let policy = SecPolicyCreateBasicX509()
+        var trust:SecTrust? = nil
+        status = SecTrustCreateWithCertificates(certificate!, policy, &trust)
+        assert(status == errSecSuccess, "SecTrustCreateWithCertificates error")
+        publicSecKey = SecTrustCopyPublicKey(trust!)
+    }
     
     // - MARK: ======================= 公私钥加解密 =======================
     
@@ -116,9 +214,11 @@ public class RSAKeyPair: NSObject {
         return keyPair
     }
     
-    /// 签名
-    /// - Parameter source: 待签名的原始数据
+    /// 签名：给定要签名的私钥和数据，生成数字签名。
+    /// - Parameter source: 待签名的数据，通常是明文数据的哈希值。
     /// return 签名后的数据
+    /// 使用同一对公私钥对同一字符串进行签名，每次执行结果都是一样的。因为没有加随机数。
+    /// 正常来说是要加一个随机数的，待完善。。。
     public func sign(source: Data) -> Data? {
         guard !source.isEmpty, let priKey = self.privateSecKey, let _ = self.publicSecKey else {  return nil }
         guard let sourceData: NSData = source as NSData? else { return nil }
